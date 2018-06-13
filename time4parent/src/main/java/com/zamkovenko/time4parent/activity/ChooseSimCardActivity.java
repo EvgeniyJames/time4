@@ -12,6 +12,6 @@ public class ChooseSimCardActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.);
+        setContentView(R.layout.activity_choose_sim);
     }
 }

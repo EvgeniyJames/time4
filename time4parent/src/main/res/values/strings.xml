@@ -10,7 +10,8 @@
     <string name="txt_tasks">Tasks</string>
     <string name="txt_your_ip">Your ip</string>
     <string name="txt_vibration">Vibration</string>
-    <string name="txt_blinking">Blinking</string>
+
+    <string name="txt_choose_sim">Choose SIM</string>
 
     <string name="txt_first_in_child">It looks like you are logged in for the first time
         \nEnter the phone number that is the parent</string>

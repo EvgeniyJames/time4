@@ -38,6 +38,7 @@
         <activity android:name=".activity.TaskEditActivity" />
         <activity android:name=".activity.CheckIpActivity" />
         <activity android:name=".activity.EnterParentPhoneActivity" />
+        <activity android:name=".activity.ChooseSimCardActivity" />
 
         <service android:name=".service.SmsProcessorService" />
     </application>

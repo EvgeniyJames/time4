@@ -27,8 +27,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="time4model-1.1-ALPHA" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="time4model-1.1-ALPHA" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="time4model-1.1-ALPHA" level="project" />
   </component>
 </module>

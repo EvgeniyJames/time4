@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 
 import com.zamkovenko.time4child.R;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             File logFile = new File(Environment.getExternalStorageDirectory() + "/"
                     + String.valueOf(new Date(System.currentTimeMillis())).replace(" ", "_") + "_log.txt");
 
-            System.out.println("LOGGING: " + logFile.getAbsolutePath());
+            Log.d(getClass().getSimpleName(),("LOGGING: " + logFile.getAbsolutePath()));
 
             // clear the previous logcat and then write the new one to the file
             try {

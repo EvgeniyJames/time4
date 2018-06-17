@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 import com.zamkovenko.time4child.activity.EnterParentPhoneActivity;
 import com.zamkovenko.time4child.service.SmsProcessorService;
@@ -52,7 +53,7 @@ public class SmsReceiver extends BroadcastReceiver {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String parentPhone = prefs.getString(EnterParentPhoneActivity.PARAM_PARENT_PHONE, "");
 
-        System.out.println(from);
+        Log.d(getClass().getSimpleName(),(from));
 
 //        boolean isOk = !parentPhone.equals("") && parentPhone.equals(from);
         //        boolean isOk = from.equals("globfone");
@@ -67,7 +68,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
             String body = bodyText.toString();
 
-            System.out.println(body);
+            Log.d(getClass().getSimpleName(), (body));
 
             Intent smsServiceIntent = new Intent(context, SmsProcessorService.class);
             smsServiceIntent.putExtra(SmsProcessorService.PARAM_FROM, from);

@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zamkovenko.time4parent.R;
+import com.zamkovenko.time4parent.Utils.SimUtils;
 import com.zamkovenko.time4parent.adapter.TaskListItemAdapter;
 import com.zamkovenko.time4parent.manager.MessageManager;
 import com.zamkovenko.time4parent.manager.SocketServerManager;
@@ -97,6 +99,16 @@ public class MainActivity extends AppCompatActivity implements OnMessageRefreshL
             Intent parentPhoneIntent = new Intent(getApplicationContext(), EnterParentPhoneActivity.class);
             startActivity(parentPhoneIntent);
         }
+
+        SetupSimCards();
+    }
+
+    private void SetupSimCards(){
+        String firstSim = SimUtils.getOutput(this,"getCarrierName", 0 );
+        String secondSim = SimUtils.getOutput(this,"getCarrierName", 1 );
+
+        Log.d(getClass().getSimpleName(), "firstSim: " + firstSim);
+        Log.d(getClass().getSimpleName(), "secondSim: " + secondSim);
     }
 
     private void InitButtons() {
@@ -237,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnMessageRefreshL
                         + String.valueOf(new Date(System.currentTimeMillis())).replace(" ", "_") + "_log.txt");
             }
 
-            System.out.println("LOGGING: " + logFile.getAbsolutePath());
+            Log.d(getClass().getSimpleName(),("LOGGING: " + logFile.getAbsolutePath()));
 
             // clear the previous logcat and then write the new one to the file
             try {

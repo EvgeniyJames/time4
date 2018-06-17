@@ -2,6 +2,7 @@ package com.zamkovenko.time4parent.manager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 
 import com.zamkovenko.time4parent.receiver.ServerMessageReceiver;
 import com.zamkovenko.utils.Connection;
@@ -45,13 +46,13 @@ public class SocketServerManager implements Runnable {
     public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(Constants.SERVER_PORT);
-            System.out.println("Server Init");
+            Log.d(getClass().getSimpleName(),("Server Init"));
 
             while (true) {
 
                 Socket socket = serverSocket.accept();
 
-                System.out.println("Client connected: " +  socket.getInetAddress());
+                Log.d(getClass().getSimpleName(), ("Client connected: " + socket.getInetAddress()) );
 
                 if (connection != null) {
                     connection.clear();

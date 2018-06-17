@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.zamkovenko.time4child.receiver.ClientMessageReceiver;
 import com.zamkovenko.time4child.activity.EnterParentIpActivity;
@@ -61,11 +62,11 @@ public class SocketClientManager implements Runnable {
 
 //                String url = ip.equals("") ? tempUrl : ip;
 
-                System.out.println("url: " + tempUrl + ":" + Constants.SERVER_PORT);
+                Log.d(getClass().getSimpleName(),("url: " + tempUrl + ":" + Constants.SERVER_PORT));
 
                 Socket socket = new Socket(tempUrl, 5554);
 
-                System.out.println("socket accept");
+                Log.d(getClass().getSimpleName(), ("socket accept"));
 
                 connection = new Connection(socket);
                 connection.setRecievedListener(new ClientMessageReceiver(context));

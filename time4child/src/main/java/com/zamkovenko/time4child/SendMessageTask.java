@@ -49,7 +49,7 @@ public class SendMessageTask extends AsyncTask<Message, Void, Void> {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(m_context);
         String parentPhone = prefs.getString(EnterParentPhoneActivity.PARAM_PARENT_PHONE, "");
-        SmsUtils.sendSMS(parentPhone, messageSerializer.serialize(message));
+        SmsUtils.sendSMS(parentPhone, messageSerializer.serialize(message), m_context);
 
         return null;
     }

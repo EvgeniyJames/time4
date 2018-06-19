@@ -53,7 +53,7 @@ public class SendMessageTask extends AsyncTask<Message, Void, Void> {
         String parentPhone = prefs.getString(EnterParentPhoneActivity.PARAM_PARENT_PHONE, "");
 
         if (!parentPhone.equals("")) {
-            SmsUtils.sendSMS(parentPhone, messageSerializer.serialize(message));
+            SmsUtils.sendSMS(parentPhone, messageSerializer.serialize(message), m_context);
         }
         return null;
     }

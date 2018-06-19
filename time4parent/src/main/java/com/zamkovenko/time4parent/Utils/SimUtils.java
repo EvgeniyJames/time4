@@ -1,9 +1,18 @@
 package com.zamkovenko.time4parent.Utils;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: Yevgeniy Zamkovenko
@@ -11,84 +20,38 @@ import java.lang.reflect.Method;
  */
 public class SimUtils {
 
-    public static String getOutput(Context context, String methodName, int slotId) {
-        TelephonyManager telephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        Class<?> telephonyClass;
-        String reflectionMethod = null;
-        String output = null;
-        try {
-            telephonyClass = Class.forName(telephony.getClass().getName());
-            for (Method method : telephonyClass.getMethods()) {
-                String name = method.getName();
-                if (name.contains(methodName)) {
-                    Class<?>[] params = method.getParameterTypes();
-                    if (params.length == 1 && params[0].getName().equals("int")) {
-                        reflectionMethod = name;
-                    }
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (reflectionMethod != null) {
-            try {
-                output = getOpByReflection(telephony, reflectionMethod, slotId, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    public static final String PARAM_SIM_CARD = "sim_card";
 
-        return output;
+    public static void WriteToSharedPreferences(Context context, int simId) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putInt(PARAM_SIM_CARD, simId).apply();
     }
 
-    private static String getOpByReflection(TelephonyManager telephony, String predictedMethodName, int slotID, boolean isPrivate) {
+    public static boolean IsSimChosen(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int simId = prefs.getInt(PARAM_SIM_CARD, -1);
+        return simId != -1;
+    }
 
-        //Log.i("Reflection", "Method: " + predictedMethodName+" "+slotID);
-        String result = null;
-
+    public static List<String> getNetworkOperator(final Context context) {
+        List<String> carrierNames = new ArrayList<>();
         try {
-
-            Class<?> telephonyClass = Class.forName(telephony.getClass().getName());
-
-            Class<?>[] parameter = new Class[1];
-            parameter[0] = int.class;
-            Method getSimID;
-            if (slotID != -1) {
-                if (isPrivate) {
-                    getSimID = telephonyClass.getDeclaredMethod(predictedMethodName, parameter);
-                } else {
-                    getSimID = telephonyClass.getMethod(predictedMethodName, parameter);
+            final String permission = Manifest.permission.READ_PHONE_STATE;
+            if ( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) && (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED) ){
+                final List<SubscriptionInfo> subscriptionInfos = SubscriptionManager.from(context).getActiveSubscriptionInfoList();
+                for (int i = 0; i < subscriptionInfos.size(); i++) {
+                    carrierNames.add(subscriptionInfos.get(i).getCarrierName().toString());
                 }
+
             } else {
-                if (isPrivate) {
-                    getSimID = telephonyClass.getDeclaredMethod(predictedMethodName);
-                } else {
-                    getSimID = telephonyClass.getMethod(predictedMethodName);
-                }
-            }
-
-            Object ob_phone;
-            Object[] obParameter = new Object[1];
-            obParameter[0] = slotID;
-            if (getSimID != null) {
-                if (slotID != -1) {
-                    ob_phone = getSimID.invoke(telephony, obParameter);
-                } else {
-                    ob_phone = getSimID.invoke(telephony);
-                }
-
-                if (ob_phone != null) {
-                    result = ob_phone.toString();
-
-                }
+                TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                // Get carrier name (Network Operator Name)
+                carrierNames.add(telephonyManager.getNetworkOperatorName());
             }
         } catch (Exception e) {
-            //e.printStackTrace();
-            return null;
+            e.printStackTrace(System.out);
         }
-        //Log.i("Reflection", "Result: " + result);
-        return result;
+        return carrierNames;
     }
-
 
 }

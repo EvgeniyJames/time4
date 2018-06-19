@@ -16,4 +16,5 @@
 
     <string name="txt_first_in_child">It looks like you are logged in for the first time
         \nEnter the phone number that is the parent</string>
+    <string name="txt_empty">EMPTY</string>
 </resources>

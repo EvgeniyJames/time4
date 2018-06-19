@@ -86,7 +86,13 @@ public class MessageManager {
             }
         }
 
-        if (isNeedRefresh && onMessageRefreshListener != null) {
+        if (isNeedRefresh) {
+            Refresh();
+        }
+    }
+
+    private void Refresh() {
+        if (onMessageRefreshListener != null) {
             onMessageRefreshListener.OnRefresh();
         }
     }
@@ -144,5 +150,6 @@ public class MessageManager {
 
     public void clearDatabase() {
         m_dbHelper.recreateDb();
+        Refresh();
     }
 }

@@ -1,7 +1,6 @@
 package com.zamkovenko.time4parent.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -10,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -83,32 +81,40 @@ public class MainActivity extends AppCompatActivity implements OnMessageRefreshL
         socketServerManager = new SocketServerManager(this);
         new Thread(socketServerManager).start();
 
-        // Request the permission immediately here for the first time run
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{
-                    Manifest.permission_group.SMS,
-                    Manifest.permission_group.STORAGE,
-            }, 0);
-        }
+        RequestPermission();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        CheckForSimSettings();
+
+        CheckForParentNumber();
+    }
+
+    private void CheckForSimSettings() {
+        if (!SimUtils.IsSimChosen(this)) {
+            Intent chooseSimIntent = new Intent(getApplicationContext(), ChooseSimCardActivity.class);
+            startActivity(chooseSimIntent);
+        }
+    }
+
+    private void CheckForParentNumber() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String parentPhone = prefs.getString(EnterParentPhoneActivity.PARAM_PARENT_PHONE, "");
         if (parentPhone.equals("")) {
             Intent parentPhoneIntent = new Intent(getApplicationContext(), EnterParentPhoneActivity.class);
             startActivity(parentPhoneIntent);
         }
-
-        SetupSimCards();
     }
 
-    private void SetupSimCards(){
-        String firstSim = SimUtils.getOutput(this,"getCarrierName", 0 );
-        String secondSim = SimUtils.getOutput(this,"getCarrierName", 1 );
-
-        Log.d(getClass().getSimpleName(), "firstSim: " + firstSim);
-        Log.d(getClass().getSimpleName(), "secondSim: " + secondSim);
+    private void RequestPermission() {
+        // Request the permission immediately here for the first time run
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{
+                    Manifest.permission_group.SMS,
+                    Manifest.permission_group.STORAGE,
+                    Manifest.permission.READ_PHONE_STATE,
+            }, 0);
+        }
     }
 
     private void InitButtons() {
@@ -173,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements OnMessageRefreshL
         });
     }
 
-    @SuppressLint("Assert")
     private void setupDaysNumbers() {
         Calendar calendar = new GregorianCalendar(
                 this.calendar.get(Calendar.YEAR), this.calendar.get(Calendar.MONTH), this.calendar.get(Calendar.DAY_OF_MONTH)
@@ -184,9 +189,7 @@ public class MainActivity extends AppCompatActivity implements OnMessageRefreshL
         LinearLayout daysOfMonthName = (LinearLayout) findViewById(R.id.layout_days_name);
 
         int daysOfMonthChildCount = daysOfMonth.getChildCount();
-        int daysOfMonthNameChildCount = daysOfMonthName.getChildCount();
-
-        assert (daysOfMonthChildCount != daysOfMonthNameChildCount);
+//        int daysOfMonthNameChildCount = daysOfMonthName.getChildCount();
 
         for (int i = 0; i < daysOfMonthChildCount; i++) {
             TextView daysOfMonthChildAt = (TextView) daysOfMonth.getChildAt(i);
@@ -240,16 +243,15 @@ public class MainActivity extends AppCompatActivity implements OnMessageRefreshL
         NONE, EDIT, DELETE
     }
 
-
     private void SetupLog() {
         if ( isExternalStorageWritable() ) {
             File logFile = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                logFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + "/"
+                logFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/"
                         + String.valueOf(new Date(System.currentTimeMillis())).replace(" ", "_") + "_log.txt");
             }
 
-            Log.d(getClass().getSimpleName(),("LOGGING: " + logFile.getAbsolutePath()));
+            Log.d(getClass().getSimpleName(),("LOGGING: " + logFile));
 
             // clear the previous logcat and then write the new one to the file
             try {

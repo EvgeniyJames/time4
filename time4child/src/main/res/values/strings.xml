@@ -5,4 +5,7 @@
     <string name="txt_confirm">Confirm</string>
     <string name="txt_ip_error">It looks like something wrong with your parent IP
         \nPlease, check IP on parent device and enter here</string>
+
+    <string name="txt_empty">EMPTY</string>
+    <string name="txt_choose_sim">Choose SIM</string>
 </resources>

@@ -16,6 +16,7 @@ import android.view.Window;
 
 import com.zamkovenko.time4child.R;
 import com.zamkovenko.time4child.receiver.NotificationReceiver;
+import com.zamkovenko.time4child.utils.SimUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -38,39 +39,55 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        // Request the permission immediately here for the first time run
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{
-//                    Manifest.permission.SEND_SMS
-//                    ,Manifest.permission.VIBRATE
-//                    ,Manifest.permission.WAKE_LOCK
-                    Manifest.permission.RECEIVE_SMS
-//                    ,Manifest.permission.READ_EXTERNAL_STORAGE
-                    ,Manifest.permission.WRITE_EXTERNAL_STORAGE
-            }, 0);
-        }
+        RequestPermission();
 
         receiver = new NotificationReceiver();
 
         registerReceiver(receiver, new IntentFilter(NotificationReceiver.ACTION));
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String parentPhone = prefs.getString(EnterParentPhoneActivity.PARAM_PARENT_PHONE, "");
+        CheckForSimSettings();
 
-        if (parentPhone.equals("")) {
-            Intent parentPhoneIntent = new Intent(this, EnterParentPhoneActivity.class);
-            startActivity(parentPhoneIntent);
-        }
+        CheckForParentNumber();
 
         finish();
     }
 
+    private void CheckForSimSettings() {
+        if (!SimUtils.IsSimChosen(this)) {
+            Intent chooseSimIntent = new Intent(getApplicationContext(), ChooseSimCardActivity.class);
+            startActivity(chooseSimIntent);
+        }
+    }
+
+    private void CheckForParentNumber() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String parentPhone = prefs.getString(EnterParentPhoneActivity.PARAM_PARENT_PHONE, "");
+        if (parentPhone.equals("")) {
+            Intent parentPhoneIntent = new Intent(this, EnterParentPhoneActivity.class);
+            startActivity(parentPhoneIntent);
+        }
+    }
+
+    private void RequestPermission() {
+        // Request the permission immediately here for the first time run
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{
+                    Manifest.permission_group.SMS,
+                    Manifest.permission_group.STORAGE,
+                    Manifest.permission.READ_PHONE_STATE,
+            }, 0);
+        }
+    }
+
     private void SetupLog() {
         if ( isExternalStorageWritable() ) {
-            File logFile = new File(Environment.getExternalStorageDirectory() + "/"
-                    + String.valueOf(new Date(System.currentTimeMillis())).replace(" ", "_") + "_log.txt");
+            File logFile = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                logFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/"
+                        + String.valueOf(new Date(System.currentTimeMillis())).replace(" ", "_") + "_log.txt");
+            }
 
-            Log.d(getClass().getSimpleName(),("LOGGING: " + logFile.getAbsolutePath()));
+            Log.d(getClass().getSimpleName(),("LOGGING: " + logFile));
 
             // clear the previous logcat and then write the new one to the file
             try {

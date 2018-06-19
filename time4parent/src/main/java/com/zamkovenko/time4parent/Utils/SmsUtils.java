@@ -29,7 +29,7 @@ public class SmsUtils {
             if (simId != -1) {
                 sendSMS(context, simId, phoneNo, null, msg, null, null);
             } else {
-                Toast.makeText(context, "simId != -1", Toast.LENGTH_SHORT).show();
+                Log.d("SmsUtils", "simId != -1");
             }
 
         } catch (Exception ex) {

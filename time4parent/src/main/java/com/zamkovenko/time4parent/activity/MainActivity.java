@@ -78,9 +78,6 @@ public class MainActivity extends AppCompatActivity implements OnMessageRefreshL
 
         InitButtons();
 
-        socketServerManager = new SocketServerManager(this);
-        new Thread(socketServerManager).start();
-
         RequestPermission();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);

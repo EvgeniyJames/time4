@@ -39,7 +39,6 @@ public class NotificationReceiver extends BroadcastReceiver {
                 Intent confirmIntent = new Intent(context, ConfirmActivity.class);
                 confirmIntent.putExtra(ConfirmActivity.PARAM_NOTIFICATION_ID, id);
                 confirmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                confirmIntent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                 context.startActivity(confirmIntent);
             }
         }

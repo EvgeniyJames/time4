@@ -42,8 +42,7 @@ public class ConfirmActivity extends AppCompatActivity {
 
         messageId = getIntent().getExtras().getShort(PARAM_NOTIFICATION_ID, (short) -1);
         if (messageId == -1) {
-            Log.d(ConfirmActivity.class.getSimpleName(), "Message id == -1");
-            Toast.makeText(this, "Message id == -1", Toast.LENGTH_SHORT).show();
+            Log.d("ConfirmActivity", "Message id == -1");
             finish();
         }
 

@@ -1,4 +1,4 @@
-package com.zamkovenko.time4parent.activity;
+package com.zamkovenko.time4child.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.zamkovenko.time4parent.R;
-import com.zamkovenko.time4parent.Utils.SimUtils;
+import com.zamkovenko.time4child.R;
+import com.zamkovenko.time4child.utils.SimUtils;
 
 import java.util.List;
 

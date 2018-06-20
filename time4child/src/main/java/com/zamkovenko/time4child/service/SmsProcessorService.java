@@ -88,23 +88,4 @@ public class SmsProcessorService extends Service {
     public IBinder onBind(Intent arg0) {
         return null;
     }
-
-    private void showNotification(SmsModel sms) {
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
-        Context context = getApplicationContext();
-
-        Notification.Builder builder = new Notification.Builder(context)
-                .setContentTitle(sms.getFrom())
-                .setContentText(sms.getBody())
-                .setContentIntent(contentIntent)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setAutoCancel(true);
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = builder.getNotification();
-        if (notificationManager != null) {
-            notificationManager.notify(R.drawable.ic_launcher_foreground, notification);
-        }
-    }
 }

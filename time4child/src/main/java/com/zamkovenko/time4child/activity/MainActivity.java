@@ -75,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission_group.SMS,
                     Manifest.permission_group.STORAGE,
                     Manifest.permission.READ_PHONE_STATE,
+
+                    Manifest.permission.READ_SMS,
+                    Manifest.permission.SEND_SMS,
+                    Manifest.permission.BROADCAST_SMS,
+                    Manifest.permission.RECEIVE_SMS,
             }, 0);
         }
     }

@@ -1,7 +1,6 @@
 package com.zamkovenko.time4parent.task;
 
 import android.Manifest;
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,14 +8,12 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.zamkovenko.time4parent.Utils.SmsUtils;
 import com.zamkovenko.time4parent.activity.EnterParentPhoneActivity;
 import com.zamkovenko.utils.model.Message;
 import com.zamkovenko.utils.model.serializer.MessageSerializer;
 import com.zamkovenko.utils.model.serializer.SmsMessageSerializer;
-import com.zamkovenko.time4parent.Utils.SmsUtils;
-import com.zamkovenko.time4parent.manager.SocketServerManager;
 
 /**
  * User: Yevgeniy Zamkovenko
@@ -39,7 +36,6 @@ public class SendMessageTask extends AsyncTask<Message, Void, Void> {
         Log.d(SendMessageTask.class.getSimpleName(), "Start to send message: " + message);
 
         MessageSerializer<String> messageSerializer = new SmsMessageSerializer();
-        SocketServerManager.getInstance().sendMessage(messageSerializer.serialize(message));
 
         if (ContextCompat.checkSelfPermission(m_context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             Log.d(SendMessageTask.class.getSimpleName(),"Need SEND_SMS permission");

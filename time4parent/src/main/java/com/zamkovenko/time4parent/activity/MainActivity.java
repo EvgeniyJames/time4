@@ -25,7 +25,6 @@ import com.zamkovenko.time4parent.R;
 import com.zamkovenko.time4parent.Utils.SimUtils;
 import com.zamkovenko.time4parent.adapter.TaskListItemAdapter;
 import com.zamkovenko.time4parent.manager.MessageManager;
-import com.zamkovenko.time4parent.manager.SocketServerManager;
 import com.zamkovenko.utils.OnMessageRefreshListener;
 import com.zamkovenko.utils.model.Message;
 
@@ -52,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements OnMessageRefreshL
     private ListView listOfTasks;
 
     List<Message> m_messageList;
-
-    private SocketServerManager socketServerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +107,11 @@ public class MainActivity extends AppCompatActivity implements OnMessageRefreshL
                     Manifest.permission_group.SMS,
                     Manifest.permission_group.STORAGE,
                     Manifest.permission.READ_PHONE_STATE,
+
+                    Manifest.permission.READ_SMS,
+                    Manifest.permission.SEND_SMS,
+                    Manifest.permission.BROADCAST_SMS,
+                    Manifest.permission.RECEIVE_SMS,
             }, 0);
         }
     }

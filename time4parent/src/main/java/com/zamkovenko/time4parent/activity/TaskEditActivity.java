@@ -35,6 +35,7 @@ import java.util.List;
 
 public class TaskEditActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
     private static final int PERMISSION_SEND_SMS = 123;
+    private static final int PERMISSION_READ_PHONE_STATE = 1234;
 
     private short m_id = -1;
 
@@ -90,11 +91,16 @@ public class TaskEditActivity extends AppCompatActivity implements TimePickerDia
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(TaskEditActivity.this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                if (!CheckPermissionSendSms()) {
                     ActivityCompat.requestPermissions(TaskEditActivity.this,
                             new String[]{Manifest.permission.SEND_SMS},
                             PERMISSION_SEND_SMS);
-                } else {
+                } else  if (!CheckPermissionGrantedReadPhoneState()) {
+                    ActivityCompat.requestPermissions(TaskEditActivity.this,
+                            new String[]{Manifest.permission.READ_PHONE_STATE},
+                            PERMISSION_READ_PHONE_STATE);
+                }
+                else {
                     SendSms();
                 }
             }
@@ -103,6 +109,14 @@ public class TaskEditActivity extends AppCompatActivity implements TimePickerDia
         CheckForEdit();
 
         OnCalendarChanged();
+    }
+
+    private boolean CheckPermissionSendSms() {
+        return ContextCompat.checkSelfPermission(TaskEditActivity.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean CheckPermissionGrantedReadPhoneState() {
+        return ContextCompat.checkSelfPermission(TaskEditActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void CheckForEdit(){
@@ -155,7 +169,12 @@ public class TaskEditActivity extends AppCompatActivity implements TimePickerDia
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_SEND_SMS: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && CheckPermissionGrantedReadPhoneState()) {
+                    SendSms();
+                }
+            }
+            case PERMISSION_READ_PHONE_STATE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && CheckPermissionSendSms()) {
                     SendSms();
                 }
             }

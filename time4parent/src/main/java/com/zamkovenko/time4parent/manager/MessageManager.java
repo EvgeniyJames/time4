@@ -1,6 +1,7 @@
 package com.zamkovenko.time4parent.manager;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.zamkovenko.time4parent.database.ParentTaskDbHelper;
 import com.zamkovenko.time4parent.task.SendMessageTask;
@@ -74,6 +75,12 @@ public class MessageManager {
     }
 
     public void markMessageDone(Message message) {
+        if (message == null) {
+            Log.d("MessageManager", "message == null");
+            return;
+        }
+
+        Log.d("MessageManager", "markMessageDone: " + message.getId());
 
         boolean isNeedRefresh = false;
 

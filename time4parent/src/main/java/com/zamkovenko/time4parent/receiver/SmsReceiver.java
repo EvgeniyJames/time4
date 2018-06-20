@@ -19,27 +19,30 @@ import com.zamkovenko.utils.ParseUtils;
 
 public class SmsReceiver extends BroadcastReceiver {
 
-    private static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
+    private static final String SMS_RECEIVED  = "android.provider.Telephony.SMS_RECEIVED";
 
     private Context context;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         this.context = context;
+        if (intent.getAction().equals(SMS_RECEIVED)) {
+            Bundle bundle  = intent.getExtras();
+            if (bundle != null) {
 
-        if (intent != null && intent.getAction() != null &&
-                ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
-            Bundle extras = intent.getExtras();
-            assert extras != null;
-            Object[] pduArray = (Object[]) extras.get("pdus");
-            assert pduArray != null;
-            SmsMessage[] messages = new SmsMessage[pduArray.length];
-            for (int i = 0; i < pduArray.length; i++) {
-                messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i]);
+                Object[] pdus = (Object[]) bundle.get("pdus");
+                if (pdus.length == 0) {
+                    return;
+                }
+
+                SmsMessage[] messages = new SmsMessage[pdus.length];
+                for (int i = 0; i < pdus.length; i++) {
+                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                }
+
+                dispatchMessage(messages);
             }
 
-            dispatchMessage(messages);
         }
     }
 
